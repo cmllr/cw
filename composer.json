@@ -1,0 +1,20 @@
+{
+    "name": "squarerootfury/cowrie-web",
+    "description": "Web Interface for Cowrie honeypot",
+    "type": "project",
+    "require": {
+        "twbs/bootstrap": "^3.3",
+        "fortawesome/font-awesome": "^4.6"
+    },
+    "license": "gpl",
+    "minimum-stability":"dev",
+    "authors": [
+        {
+            "name": "Christoph M",
+            "email": "fury224@googlemail.com"
+        }
+    ],
+    "require-dev": {
+        "squarerootfury/butterphp": "dev-master"
+    }
+}
