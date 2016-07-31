@@ -1,0 +1,34 @@
+<table class="table">
+	<tr>
+		<th>Command</th>
+		<th>Succeeded</th>
+	</tr>
+	<tr v-for="input in inputs">
+		<td><pre>{{ input.Input }}</pre></td>
+		<td>{{ input.Success }}</td>
+	</tr>
+</table>
+<script>
+	Vue.http.options.emulateJSON = false;
+	vm = new Vue({
+	  el: 'body',
+	  data: {
+	  	inputs:null
+	  },
+	  created: function(){
+	  },
+	  ready:function(){
+	  	this.getPasswords();
+	  },
+	  computed: {
+	    
+	  },
+	  methods: {
+	    getPasswords:function(){
+		    this.$http.post("?/getinputs/",{}).then(function(data){
+	        this.inputs = JSON.parse(data.body);
+	      });
+	    }
+	  }
+	});
+</script>

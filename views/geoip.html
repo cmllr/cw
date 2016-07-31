@@ -1,0 +1,74 @@
+<table class="table">
+	<tr>
+		<th>IP</th>
+		<th>Count</th>
+		<th>City</th>
+		<th>Region</th>
+		<th>Country</th>
+		<th>Longitude</th>
+		<th>Latitude</th>
+	</tr>
+	<tr v-for="ip in geoip">
+		<td>{{ ip.IP }}</td>
+		<td>{{ ip.Count }}</td>
+		<td>{{ ip.City }}</td>
+		<td>{{ ip.Region }}</td>
+		<td>{{ ip.Country }}</td>
+		<td>{{ ip.Longitude }}</td>
+		<td>{{ ip.Latitude }}</td>
+	</tr>
+</table>
+<div id="mapdiv"></div>
+<script>
+	function GetMap(data){
+	    // The overlay layer for our marker, with a simple diamond as symbol
+	    var overlay = new OpenLayers.Layer.Vector('Overlay', {
+	        styleMap: new OpenLayers.StyleMap({
+	            externalGraphic: 'views/marker.png',
+	            graphicWidth: 20, graphicHeight: 24, graphicYOffset: -24,
+	            title: '${tooltip}'
+	        })
+	    });
+	    var myLocation;
+	    var map = null;
+	    for(var i=0;i<data.length;i++){
+		    myLocation = new OpenLayers.Geometry.Point(data[i].Longitude, data[i].Latitude)
+		        .transform('EPSG:4326', 'EPSG:3857');
+		    overlay.addFeatures([
+		        new OpenLayers.Feature.Vector(myLocation, {tooltip: 'OpenLayers'})
+		    ]);
+		    if (map === null){
+			    map = new OpenLayers.Map({
+			        div: "mapdiv", projection: "EPSG:3857",
+			        layers: [new OpenLayers.Layer.OSM(), overlay],
+			        center: myLocation.getBounds().getCenterLonLat(), zoom: 1
+			    });
+		    }
+		}  
+	}
+</script>
+<script>
+	Vue.http.options.emulateJSON = false;
+	vm = new Vue({
+	  el: 'body',
+	  data: {
+	  	geoip:null
+	  },
+	  created: function(){
+	  },
+	  ready:function(){
+	  	this.getMarkers();
+	  },
+	  computed: {
+	    
+	  },
+	  methods: {
+	    getMarkers:function(){
+		    this.$http.post("?/getgeoip/",{}).then(function(data){
+		        this.geoip = JSON.parse(data.body);
+		        GetMap(this.geoip);
+		    });
+	    }
+	  }
+	});
+</script>

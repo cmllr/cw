@@ -1,0 +1,30 @@
+<ul>
+  <li v-for="password in passwords">
+    {{ password.password }} {{ password.count }}
+  </li>
+</ul>
+
+<script>
+	Vue.http.options.emulateJSON = false;
+	vm = new Vue({
+	  el: 'body',
+	  data: {
+	  	passwords:null
+	  },
+	  created: function(){
+	  },
+	  ready:function(){
+	  	this.getPasswords();
+	  },
+	  computed: {
+	    
+	  },
+	  methods: {
+	    getPasswords:function(){
+		    this.$http.post("?/getpasswords/",{}).then(function(data){
+	        this.passwords = JSON.parse(data.body);
+	      });
+	    }
+	  }
+	});
+</script>
